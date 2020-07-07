@@ -13,7 +13,11 @@ module.exports = {
     modules: ['node_modules', 'modules'],
     extensions: ['*', '.ts', '.tsx', '.js'],
     alias: {
-      '@src': resolve(__dirname, '../src'),
+      '~src': resolve(__dirname, '../src'),
+      '~utils': resolve(__dirname, '../src/utils'),
+      '~types': resolve(__dirname, '../src/@types'),
+      '~stores': resolve(__dirname, '../src/stores'),
+      '~helpers': resolve(__dirname, '../src/helpers'),
     },
   },
   module: {
