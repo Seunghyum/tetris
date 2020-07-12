@@ -1,7 +1,7 @@
 {
   "name": "ts-react-base",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "index.tsx",
   "license": "MIT",
   "scripts": {
     "dev": "webpack-dev-server --open --config ./build/webpack.config.dev.js",
