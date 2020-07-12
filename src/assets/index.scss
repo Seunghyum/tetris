@@ -10,12 +10,15 @@
 
 .grid {
   display: flex;
+  width: fit-content;
+  margin: auto;
 }
 
 .grid-column {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  margin-right: 10px;
 }
 
 .control-guide-board {
