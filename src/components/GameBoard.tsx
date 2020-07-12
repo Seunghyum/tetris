@@ -4,7 +4,9 @@ import styled from 'styled-components'
 
 import { COLOR, COLS, KEY, ROWS, SHAPES } from '~utils/shapes'
 
-const BoardTag = styled.table`
+import CurrentPieceBoard from './CurrentPieceBoard'
+
+const BoardTable = styled.table`
   width: fit-content;
   border: solid 2px;
   border-collapse: collapse;
@@ -26,11 +28,16 @@ const PlayButton = styled.button`
   cursor: pointer;
 `
 
+const DashBoardColum = styled.div`
+  width: fit-content;
+  display: inline-block;
+`
+
 function Board(): ReactElement {
   const [grid, setGrid] = useState([])
   const [beforeGrid, setBeforeGrid] = useState([])
   const [currentPiece, setCurrentPiece] = useState([])
-  const [currentPieceType, setCurrentPieceType] = useState(null)
+  const [currentPieceType, setCurrentPieceType] = useState(0)
   const [currentPiecePosition, setCurrentPiecePosition] = useState({ x: 0, y: 0 })
   const [gameState, setGameState] = useState(false)
   const [pauseGame, setPauseGame] = useState(false)
@@ -55,14 +62,11 @@ function Board(): ReactElement {
     return Array.from({ length: ROWS }, () => Array(COLS).fill(0))
   }
 
-  const moves = (
-    key: KEY,
-    piecePosition: { x: number; y: number },
-  ): { x: number; y: number } | false => {
+  const moves = (key: KEY, piecePosition: { x: number; y: number }): { x: number; y: number } => {
     if (key === KEY.LEFT) return { x: piecePosition.x - 1, y: piecePosition.y }
     else if (key === KEY.RIGHT) return { x: piecePosition.x + 1, y: piecePosition.y }
     else if (key === KEY.DOWN) return { x: piecePosition.x, y: piecePosition.y + 1 }
-    else return false
+    else return piecePosition
   }
 
   const isInsideWalls = (x: number): boolean => {
@@ -103,7 +107,7 @@ function Board(): ReactElement {
     piece: number[][]
     position: { x: number; y: number }
     type: number
-  }): void => {
+  }): number[][] => {
     const { piece, position, type } = props
     const tmpGrid = cloneArr(beforeGridRef.current)
 
@@ -115,18 +119,21 @@ function Board(): ReactElement {
         tmpGrid[dy][dx] = type
       })
     })
-    setGrid(tmpGrid)
+
+    // setGrid(tmpGrid)
+    return tmpGrid
   }
 
   const start = () => {
     const type = initPieceType()
     setCurrentPiece(SHAPES[type])
     setCurrentPieceType(type)
-    updateGrid({
+    const updatedGrid = updateGrid({
       piece: SHAPES[type],
       position: currentPiecePosition,
       type,
     })
+    setGrid(updatedGrid)
     setGameState(true)
   }
 
@@ -134,21 +141,48 @@ function Board(): ReactElement {
     setPauseGame(true)
   }
 
+  const rotatePiece = (piece: number[][], type: number): number[][] => {
+    const result = Array.from({ length: piece.length }, () => Array(piece[0].length).fill(0))
+    if (piece.length === 3) {
+      const CORE = Math.floor(piece.length / 2)
+      result[CORE][CORE] = type
+      piece.forEach((row: number[], x: number) => {
+        row.forEach((col: number, y: number) => {
+          if (col !== 0) {
+            result[y][piece.length - 1 - x] = type
+          }
+        })
+      })
+    }
+
+    return result
+  }
+
   const keydownEventFunc = (event: KeyboardEvent) => {
     // 이벤트 버블링을 막는다.
     event.preventDefault()
     if (pauseGameRef.current) return false
-    const piece = currentPieceRef.current
+    if (!Object.values(KEY).includes(event.keyCode)) return false
+
     const position = moves(event.keyCode, currentPiecePositionRef.current) // 조각의 새 상태를 얻는다.
-    if (!position) return false
+    if (event.keyCode === KEY.UP) {
+      const rotatedPiece = rotatePiece(currentPieceRef.current, currentPieceTypeRef.current)
+      setCurrentPiece(rotatedPiece)
+    }
+    const piece = currentPieceRef.current
+    console.table('=====piece : ', piece)
+    console.table('=====currentPieceRef.current : ', currentPieceRef.current)
+
     if (checkBlockValid(piece, position)) {
+      console.log('=======')
       // 이동이 가능한 상태라면 조각을 이동한다.
-      setCurrentPiecePosition(position)
-      updateGrid({
+      if (position) setCurrentPiecePosition(position)
+      const updatedGrid = updateGrid({
         piece,
         position,
         type: currentPieceTypeRef.current,
       })
+      setGrid(updatedGrid)
     }
   }
 
@@ -161,19 +195,9 @@ function Board(): ReactElement {
     }
   }, [])
 
-  useEffect(() => {
-    gridRef.current = grid
-  }, [grid])
-
-  useEffect(() => {
-    beforeGridRef.current = beforeGrid
-  }, [beforeGrid])
-
-  useEffect(() => {}, [currentPiece])
-
   return (
     <>
-      <div>
+      <DashBoardColum>
         <PlayButton type="submit" onClick={start}>
           {gameState ? 'Reset' : 'Play'}
         </PlayButton>
@@ -189,11 +213,14 @@ function Board(): ReactElement {
           Level:
           <span id="level">0</span>
         </p>
-      </div>
+      </DashBoardColum>
+      <DashBoardColum>
+        <CurrentPieceBoard piece={currentPiece} color={COLOR[currentPieceType]} />
+      </DashBoardColum>
       <button type="submit" onClick={pause} disabled={!gameState}>
         {!gameState && pauseGame ? 'Start' : 'Stop'}
       </button>
-      <BoardTag>
+      <BoardTable>
         <tbody>
           {grid.map((row, rowIndex) => (
             <tr key={`r${rowIndex}`}>
@@ -205,7 +232,7 @@ function Board(): ReactElement {
             </tr>
           ))}
         </tbody>
-      </BoardTag>
+      </BoardTable>
     </>
   )
 }
