@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 
+import { COLOR } from '~utils/shapes'
 interface Props {
   piece: number[][]
-  color: string
 }
 
 const BoardTable = styled.table`
@@ -28,18 +28,22 @@ function CurrentPieceBoard(props: Props): React.ReactElement {
     [0, 0, 0, 0],
     [0, 0, 0, 0],
   ]
-  const { color, piece = baseBoard } = props
+  const { piece = baseBoard } = props
 
   return (
     <BoardTable>
       <tbody>
         {baseBoard.map((row, x) => (
           <tr key={`r${x}`}>
-            {row.map((col: number, y: number) => (
-              <td key={`r${x}-c${y}`}>
-                <BlockItem color={piece[x] && piece[y] && piece[x][y] !== 0 ? color : 'none'} />
-              </td>
-            ))}
+            {row.map((col: number, y: number) => {
+              return (
+                <td key={`r${x}-c${y}`}>
+                  <BlockItem
+                    color={piece[x] && piece[y] && piece[x][y] !== 0 ? COLOR[col] : 'none'}
+                  />
+                </td>
+              )
+            })}
           </tr>
         ))}
       </tbody>

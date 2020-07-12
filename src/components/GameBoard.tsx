@@ -78,7 +78,7 @@ function Board(): ReactElement {
   }
 
   const isNotOccupied = (x: number, y: number): boolean => {
-    return beforeGridRef.current[y][x] === 0
+    return beforeGridRef.current[y] && beforeGridRef.current[y][x] === 0
   }
 
   const checkBlockValid = (piece: number[][], piecePosition: { x: number; y: number }) => {
@@ -215,7 +215,7 @@ function Board(): ReactElement {
         </p>
       </DashBoardColum>
       <DashBoardColum>
-        <CurrentPieceBoard piece={currentPiece} color={COLOR[currentPieceType]} />
+        <CurrentPieceBoard piece={currentPiece} />
       </DashBoardColum>
       <button type="submit" onClick={pause} disabled={!gameState}>
         {!gameState && pauseGame ? 'Start' : 'Stop'}
