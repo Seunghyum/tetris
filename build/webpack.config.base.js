@@ -17,6 +17,7 @@ module.exports = {
       '~utils': resolve(__dirname, '../src/utils'),
       '~assets': resolve(__dirname, '../src/assets'),
       '~components': resolve(__dirname, '../src/components'),
+      '~containers': resolve(__dirname, '../src/containers'),
       '~types': resolve(__dirname, '../src/@types'),
       '~stores': resolve(__dirname, '../src/stores'),
       '~helpers': resolve(__dirname, '../src/helpers'),

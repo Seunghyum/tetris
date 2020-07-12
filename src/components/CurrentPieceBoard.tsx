@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 
 import { COLOR } from '~utils/shapes'
@@ -33,14 +33,12 @@ function CurrentPieceBoard(props: Props): React.ReactElement {
   return (
     <BoardTable>
       <tbody>
-        {baseBoard.map((row, x) => (
-          <tr key={`r${x}`}>
+        {baseBoard.map((row: number[], x: number) => (
+          <tr key={`pieceboard-r${x}`}>
             {row.map((col: number, y: number) => {
               return (
-                <td key={`r${x}-c${y}`}>
-                  <BlockItem
-                    color={piece[x] && piece[y] && piece[x][y] !== 0 ? COLOR[col] : 'none'}
-                  />
+                <td key={`pieceboard-r${x}-c${y}`}>
+                  <BlockItem color={piece[x] && piece[x][y] !== 0 ? COLOR[piece[x][y]] : 'none'} />
                 </td>
               )
             })}

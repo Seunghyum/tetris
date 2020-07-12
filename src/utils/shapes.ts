@@ -40,7 +40,7 @@ export const SHAPES = [
 ]
 
 export enum COLOR {
-  'none',
+  'transparent',
   'cyan',
   'blue',
   'orange',

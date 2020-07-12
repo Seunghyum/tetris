@@ -2,17 +2,17 @@ import React from 'react'
 import styled from 'styled-components'
 
 import ControlGuideBoard from '~components/ControlGuideBoard'
-import GameBoard from '~components/GameBoard'
+import TetrisBoard from '~containers/TetrisBoard'
 
 function App(): React.ReactElement {
   return (
     <>
       <h1 className="main-title">TETRIS</h1>
       <div className="grid">
-        <div className="left-column">
-          <GameBoard />
+        <div className="grid-column">
+          <TetrisBoard />
         </div>
-        <div className="right-column">
+        <div className="grid-column">
           <ControlGuideBoard />
         </div>
       </div>

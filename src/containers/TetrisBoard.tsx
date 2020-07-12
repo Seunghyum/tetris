@@ -1,10 +1,8 @@
-import { List } from 'immutable'
 import React, { ReactElement, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
+import CurrentPieceBoard from '~components/CurrentPieceBoard'
 import { COLOR, COLS, KEY, ROWS, SHAPES } from '~utils/shapes'
-
-import CurrentPieceBoard from './CurrentPieceBoard'
 
 const BoardTable = styled.table`
   width: fit-content;
@@ -30,10 +28,9 @@ const PlayButton = styled.button`
 
 const DashBoardColum = styled.div`
   width: fit-content;
-  display: inline-block;
 `
 
-function Board(): ReactElement {
+function TetrisBoard(): ReactElement {
   const [grid, setGrid] = useState([])
   const [beforeGrid, setBeforeGrid] = useState([])
   const [currentPiece, setCurrentPiece] = useState([])
@@ -170,11 +167,8 @@ function Board(): ReactElement {
       setCurrentPiece(rotatedPiece)
     }
     const piece = currentPieceRef.current
-    console.table('=====piece : ', piece)
-    console.table('=====currentPieceRef.current : ', currentPieceRef.current)
 
     if (checkBlockValid(piece, position)) {
-      console.log('=======')
       // 이동이 가능한 상태라면 조각을 이동한다.
       if (position) setCurrentPiecePosition(position)
       const updatedGrid = updateGrid({
@@ -196,44 +190,50 @@ function Board(): ReactElement {
   }, [])
 
   return (
-    <>
-      <DashBoardColum>
-        <PlayButton type="submit" onClick={start}>
-          {gameState ? 'Reset' : 'Play'}
-        </PlayButton>
-        <p>
-          Score:
-          <span id="score">0</span>
-        </p>
-        <p>
-          Lines:
-          <span id="lines">0</span>
-        </p>
-        <p>
-          Level:
-          <span id="level">0</span>
-        </p>
-      </DashBoardColum>
-      <DashBoardColum>
-        <CurrentPieceBoard piece={currentPiece} />
-      </DashBoardColum>
-      <button type="submit" onClick={pause} disabled={!gameState}>
-        {!gameState && pauseGame ? 'Start' : 'Stop'}
-      </button>
-      <BoardTable>
-        <tbody>
-          {grid.map((row, rowIndex) => (
-            <tr key={`r${rowIndex}`}>
-              {row.map((col: number, colIndex: number) => (
-                <td key={`r${rowIndex}-c${colIndex}`}>
-                  <BlockItem color={COLOR[col]} />
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </BoardTable>
-    </>
+    <div className="grid">
+      <div className="grid-column">
+        <DashBoardColum>
+          <PlayButton type="submit" onClick={start}>
+            {gameState ? 'Reset' : 'Play'}
+          </PlayButton>
+          <p>
+            Score:
+            <span id="score">0</span>
+          </p>
+          <p>
+            Lines:
+            <span id="lines">0</span>
+          </p>
+          <p>
+            Level:
+            <span id="level">0</span>
+          </p>
+        </DashBoardColum>
+      </div>
+      <div className="grid-column">
+        <DashBoardColum>
+          <CurrentPieceBoard piece={currentPiece} />
+        </DashBoardColum>
+      </div>
+      <div className="grid-column">
+        <button type="submit" onClick={pause} disabled={!gameState}>
+          {!gameState && pauseGame ? 'Start' : 'Stop'}
+        </button>
+        <BoardTable>
+          <tbody>
+            {grid.map((row, rowIndex) => (
+              <tr key={`r${rowIndex}`}>
+                {row.map((col: number, colIndex: number) => (
+                  <td key={`r${rowIndex}-c${colIndex}`}>
+                    <BlockItem color={COLOR[col]} />
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </BoardTable>
+      </div>
+    </div>
   )
 }
-export default Board
+export default TetrisBoard
