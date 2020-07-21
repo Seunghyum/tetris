@@ -12,6 +12,7 @@
     "esModuleInterop": true,
     "baseUrl": ".",
     "allowSyntheticDefaultImports": true,
+    "rootDirs": ["src", "stories"],
     "paths": {
       "~src/*":  ["src/*"],
       "~utils/*": ["src/utils/*"],
@@ -20,11 +21,12 @@
       "~containers/*": ["src/containers/*"],
       "~stores/*": ["src/stores/*"],
       "~helpers/*": ["src/helpers/*"],
-      "~types/*": ["src/@types/*"] 
+      "~types/*": ["src/@types/*"]
     },
     "typeRoots": [
       "./node_modules/@types",
     ],
   },
-  "include": ["src"]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "build", "scripts"]
 }

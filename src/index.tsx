@@ -1,4 +1,4 @@
-import '~assets/index.scss'
+import '~assets/styles/index.scss'
 import '@fortawesome/fontawesome-free/js/all'
 
 import React from 'react'

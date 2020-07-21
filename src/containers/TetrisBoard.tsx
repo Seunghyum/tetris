@@ -2,6 +2,7 @@ import React, { ReactElement, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import CurrentPieceBoard from '~components/CurrentPieceBoard'
+import DashBoard from '~components/DashBoard'
 import { COLOR, COLS, KEY, ROWS, SHAPES } from '~utils/shapes'
 
 const BoardTable = styled.table`
@@ -17,13 +18,6 @@ const BlockItem = styled.div`
   height: 30px;
   width: 30px;
   background-color: ${(props: { color: string }): string => props.color};
-`
-
-const PlayButton = styled.button`
-  background-color: #4caf50;
-  font-size: 16px;
-  padding: 15px 30px;
-  cursor: pointer;
 `
 
 const DashBoardColum = styled.div`
@@ -193,21 +187,7 @@ function TetrisBoard(): ReactElement {
     <div className="grid">
       <div className="grid-column">
         <DashBoardColum>
-          <PlayButton type="submit" onClick={start}>
-            {gameState ? 'Reset' : 'Play'}
-          </PlayButton>
-          <p>
-            Score:
-            <span id="score">0</span>
-          </p>
-          <p>
-            Lines:
-            <span id="lines">0</span>
-          </p>
-          <p>
-            Level:
-            <span id="level">0</span>
-          </p>
+          <DashBoard start={start} gameState={gameState} />
         </DashBoardColum>
       </div>
       <div className="grid-column">
